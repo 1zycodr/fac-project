@@ -5,7 +5,6 @@ from django.views.generic import (
 )
 from core import models, forms
 import xlwt
-import datetime
 import os
 import openpyxl
 from django.core.files.storage import default_storage
@@ -15,13 +14,13 @@ from django.conf import settings
 
 class FACListView(ListView):
 	model = models.FuncAcceptanceCertificate
-	queryset = models.FuncAcceptanceCertificate.objects.all()
+	queryset = models.FuncAcceptanceCertificate.objects.all().order_by('date')
 	template_name = 'fac/index.html'
 
 
 class SystemListView(ListView):
 	model = models.SystemList
-	queryset = models.SystemList.objects.all()
+	queryset = models.SystemList.objects.all().order_by('date')
 	template_name = 'system/index.html'
 
 
@@ -49,7 +48,7 @@ class FACEditView(UpdateView):
 
 class FACExportView(ListView):
 	model = models.FuncAcceptanceCertificate
-	queryset = models.FuncAcceptanceCertificate.objects.all()
+	queryset = models.FuncAcceptanceCertificate.objects.all().order_by('date')
 
 	def get(self, request, *args, **kwargs):
 		response = HttpResponse(content_type='application/ms-excel')
@@ -121,7 +120,7 @@ class FACUploadView(View):
 
 class FACExportDetailsView(DetailView):
 	model = models.FuncAcceptanceCertificate
-	queryset = models.FuncAcceptanceCertificate.objects.all()
+	queryset = models.FuncAcceptanceCertificate.objects.all().order_by('date')
 
 	def get(self, request, *args, **kwargs):
 		response = HttpResponse(content_type='application/ms-excel')
@@ -161,11 +160,20 @@ class FACExportDetailsView(DetailView):
 class FACCheckView(ListView):
 	model = models.SystemList
 	template_name = 'system/check.html'
+	queryset = models.SystemList.objects.order_by('date')
 
 	def get_queryset(self):
 		qs = super(FACCheckView, self).get_queryset()
-		objects = models.FuncAcceptanceCertificate.objects.values_list('objs', flat=True)
-		obj_names = set()
+		objects = models.FuncAcceptanceCertificate.objects.all()
+		objects_names = qs.values_list('name', flat=True)
+		add_names = set()
+		exclude_names = set()
 		for obj in objects:
-			obj_names.update(obj.replace(' ', '').split(','))
-		return qs.exclude(name__in=obj_names)
+			for name in obj.objs.replace(' ', '').split(','):
+				if name in objects_names:
+					for f in qs:
+						if f.name == name:
+							if obj.date == f.date:
+								exclude_names.add(name)
+
+		return qs.exclude(name__in=exclude_names)
