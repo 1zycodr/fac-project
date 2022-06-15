@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Системный список</title>
+    <title>Функционально - приёмочные акты</title>
     <style>*{
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -168,48 +168,82 @@ h2{
     a:hover {
         cursor: pointer;
     }
-    .block {
-        width: 100%;
-        padding: 15px;
+    .form-container {
+        padding: 40px;
         display: flex;
-        justify-content: flex-end;
-        padding-right: 60px;
+        flex-direction: column;
     }
-    #iddd:hover {
-        cursor: pointer;;
+    .form-row {
+        width: 30%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        margin-bottom: 20px;
+    }
+    .form-row label {
+        color: white;
+    }
+    .form-row input {
+        padding: 5px;
+        padding-left: 10px;
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid gray;
     }
 </style>
 </head>
 <body>
     <div class="table-wrapper">
-        <table class="fl-table">
-            <thead>
-                <tr>
-                    <th>Наименование объекта</th>
-                    <th>Тип</th>
-                    <th>Дата</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for obj in object_list %}
-                    <tr>
-                        <td>{{ obj.name }}</td>
-                        <td>{{ obj.type }}</td>
-                        <td>{{ obj.date }}</td>
-                    </tr>
-                {% endfor %}
-            <tbody>
-        </table>
-        <div class="buttons">
-            <a href="{% url 'fac-list' %}">К функционально - приёмочным актам</a>
-        </div>
-        <div class="block">
-            <form action="{% url 'fac-upload' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="file">
-                <input id="iddd" type="submit" value="Загрузить" style="padding: 5px 40px;background: grey;color: white;border: 1px solid gray;">
-            </form>
-        </div>
+        <form action="{% url 'fac-create' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-container">
+                <div class="form-row">
+                    <label for="{{ form.number.id_for_label }}">
+                        {{ form.number.label }}
+                    </label>
+                    {{ form.number }}
+                </div>
+                <div class="form-row">
+                    <label for="{{ form.protocol.id_for_label }}">
+                        {{ form.protocol.label }}
+                    </label>
+                    {{ form.protocol }}
+                </div>
+                <div class="form-row">
+                    <label for="{{ form.description.id_for_label }}">
+                        {{ form.description.label }}
+                    </label>
+                    {{ form.description }}
+                </div>
+                <div class="form-row" style="width: 35%">
+                    <label for="{{ form.objs.id_for_label }}">
+                        {{ form.objs.label }}
+                    </label>
+                    {{ form.objs }}
+                </div>
+                <div class="form-row">
+                    <label for="{{ form.date.id_for_label }}">
+                        {{ form.date.label }}
+                    </label>
+                    {{ form.date }}
+                </div>
+                <div class="form-row">
+                    <label for="{{ form.customer.id_for_label }}">
+                        {{ form.customer.label }}
+                    </label>
+                    {{ form.customer }}
+                </div>
+                <div class="form-row">
+                    <label for="{{ form.executor.id_for_label }}">
+                        {{ form.executor.label }}
+                    </label>
+                    {{ form.executor }}
+                </div>
+                <div class="form-row" style="display: flex;width: 30%;justify-content: flex-end;">
+                    <input type="submit" value="Создать">
+                </div>
+            </div>
+        </form>
     </div>
 </body>
 </html>

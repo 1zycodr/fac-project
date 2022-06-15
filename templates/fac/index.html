@@ -129,38 +129,87 @@ h2{
         display: block;
         text-align: center;
     }
-}</style>
+    }
+    a:link {    /* unvisited link */
+        color: #ff0000;
+        text-decoration: none;
+        border-bottom: 1px solid;
+    }
+    a:visited {    /* visited link */
+        color: #d267ff;
+    }
+    a:hover {    /* mouse over link */
+        color: #00ff00;
+        border-bottom: none;
+    }
+    a:active {    /* active link */
+        color: #00ffff;
+    }
+    .buttons {
+        margin-top: 12px;
+        justify-content: space-around;
+        width: 100%;
+        height: 30px;
+        align-items: center;
+        text-align: right;
+    }
+    .buttons a {
+        margin-right: 5%;
+        margin-bottom: 10px;
+        width: 140px;
+        height: 40px;
+        background: white;
+        border: 1px solid gray;
+        padding: 6px;
+    }
+    .buttons a {
+        height: 0;
+    }
+    a:hover {
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
     <div class="table-wrapper">
-    <table class="fl-table">
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>Протокол тестирования</th>
-                <th>Описание патча</th>
-                <th>Объекты</th>
-                <th>Дата посадки</th>
-                <th>Заказчик</th>
-                <th>Исполнитель</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for obj in object_list %}
+        <table class="fl-table">
+            <thead>
                 <tr>
-                    <td>{{ obj.number }}</td>
-                    <td>{{ obj.protocol }}</td>
-                    <td>{{ obj.description }}</td>
-                    <td>
-                        {% for o in obj.objs.all %}{{ o.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    </td>
-                    <td>{{ obj.date }}</td>
-                    <td>{{ obj.customer }}</td>
-                    <td>{{ obj.executor }}</td>
+                    <th>№</th>
+                    <th>Протокол тестирования</th>
+                    <th>Описание патча</th>
+                    <th>Объекты</th>
+                    <th>Дата посадки</th>
+                    <th>Заказчик</th>
+                    <th>Исполнитель</th>
+                    <th>Действия</th>
                 </tr>
-            {% endfor %}
-        <tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% for obj in object_list %}
+                    <tr>
+                        <td>{{ obj.number }}</td>
+                        <td>{{ obj.protocol }}</td>
+                        <td>{{ obj.description }}</td>
+                        <td>{{ obj.objs }}</td>
+                        <td>{{ obj.date }}</td>
+                        <td>{{ obj.customer }}</td>
+                        <td>{{ obj.executor }}</td>
+                        <td>
+                            <a href="{% url 'delete-fac' obj.pk %}">Удалить</a>
+                            <a href="{% url 'fac-edit' obj.pk %}">Изменить</a>
+                            <a href="{% url 'fac-export' obj.pk %}">Выгрузить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            <tbody>
+        </table>
+        <div class="buttons">
+            <a href="{% url 'fac-check' %}">Просмотреть сверку</a>
+            <a href="{% url 'fac-create' %}">Добавить</a>
+            <a href="{% url 'system-list' %}">К системному списку</a>
+            <a href="{% url 'fac-export' %}">Выгрузить</a>
+        </div>
+    </div>
 </body>
 </html>

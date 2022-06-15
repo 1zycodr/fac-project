@@ -203,13 +203,6 @@ h2{
         <div class="buttons">
             <a href="{% url 'fac-list' %}">К функционально - приёмочным актам</a>
         </div>
-        <div class="block">
-            <form action="{% url 'fac-upload' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="file">
-                <input id="iddd" type="submit" value="Загрузить" style="padding: 5px 40px;background: grey;color: white;border: 1px solid gray;">
-            </form>
-        </div>
     </div>
 </body>
 </html>

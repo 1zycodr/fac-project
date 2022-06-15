@@ -7,21 +7,13 @@ class SystemList(models.Model):
 		verbose_name = 'Системный список'
 		verbose_name_plural = 'Системные списки'
 
-	PROCEDURE, OBJECT, PACKAGE = range(3)
-
-	TYPE_CHOICES = (
-		(PROCEDURE, 'PROCEDURE'),
-		(OBJECT, 'OBJECT'),
-		(PACKAGE, 'PACKAGE'),
-	)
-
 	name = models.CharField(
 		max_length=255,
 		verbose_name='Наименование объекта'
 	)
 
-	type = models.IntegerField(
-		choices=TYPE_CHOICES,
+	type = models.CharField(
+		max_length=255,
 		verbose_name='Тип'
 	)
 
@@ -30,7 +22,7 @@ class SystemList(models.Model):
 	)
 
 	def __str__(self):
-		return f'{self.name}: {dict(self.TYPE_CHOICES).get(self.type)}'
+		return f'{self.name}'
 
 
 class FuncAcceptanceCertificate(models.Model):
@@ -54,8 +46,7 @@ class FuncAcceptanceCertificate(models.Model):
 		verbose_name='Описание патча'
 	)
 
-	objs = models.ManyToManyField(
-		SystemList,
+	objs = models.TextField(
 		blank=True,
 		verbose_name='Объекты'
 	)
@@ -73,3 +64,6 @@ class FuncAcceptanceCertificate(models.Model):
 		max_length=255,
 		verbose_name='Исполнитель'
 	)
+
+	def __str__(self):
+		return f'№{self.number}, {self.description}'
